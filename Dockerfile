@@ -1,8 +1,10 @@
 #Grab ubuntu:18.04 image
 FROM ubuntu:18.04
 
-#Move required files to image
+#Create folder to put certs in
 RUN mkdir aiven-kafka && mkdir /aiven-kafka/certs/
+
+#Move required files to image
 COPY producer.py /aiven-kafka/producer.py
 COPY consumer.py /aiven-kafka/consumer.py
 COPY main.py /aiven-kafka/main.py
@@ -15,5 +17,8 @@ RUN apt-get update && \
     pip3 install kafka-python requests && \
     pip3 install psycopg2-binary
 
+#Make install script executable
 RUN chmod +x /aiven-kafka/install.sh
+
+#Run install script on first boot
 ENTRYPOINT "./aiven-kafka/install.sh" && /bin/bash
