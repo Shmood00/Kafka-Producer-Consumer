@@ -45,6 +45,8 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     echo ""
     read -p "Enter in your kafka service URI: " host
     read -p "Enter in your kafka topic: " topic
+    read -p "Enter in your consumer client-id: " client_id
+    read -p "Enter in your consumer group-id:" group_id
     echo ""
     echo "*********************************************************************************"
     echo ""
@@ -64,7 +66,7 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     echo "Creating your 'config.ini' file."
     echo ""
 
-    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" >> $CONTAINER_ALREADY_STARTED
+    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nclient_id=$client_id\ngroup_id=$group_id\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" >> $CONTAINER_ALREADY_STARTED
     echo ""
     echo "Your 'config.ini' file has been created and moved to the location: $CONTAINER_ALREADY_STARTED"
     echo "Please navigate to the /aiven-kafka/ folder to run the program."

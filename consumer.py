@@ -5,12 +5,12 @@ import psycopg2, json
 
 class Consumer:
 
-    def __init__(self, topic, offset_reset, server, security_protocol, ssl_cafile, ssl_certfile, ssl_keyfile):
+    def __init__(self, topic, offset_reset, client_id, group_id, server, security_protocol, ssl_cafile, ssl_certfile, ssl_keyfile):
         self.consumer = KafkaConsumer(
             topic,
             auto_offset_reset=offset_reset,
-            client_id="consumer-id-1",
-            group_id="consumer-group-id",
+            client_id=client_id,
+            group_id=group_id,
             bootstrap_servers=server,
             security_protocol=security_protocol,
             ssl_cafile=ssl_cafile,

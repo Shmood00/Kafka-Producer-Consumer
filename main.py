@@ -31,6 +31,8 @@ if __name__ == '__main__':
         consumer = Consumer(
             config['DEFAULT']['topic'],
             'earliest',
+            config['DEFAULT']['client_id'],
+            config['DEFAULT']['group_id'],
             config['DEFAULT']['host'],
             'SSL',
             config['DEFAULT']['ssl_cafile'],
