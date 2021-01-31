@@ -53,9 +53,10 @@ if __name__ == '__main__':
         #Grab kafka topic data and add to db
         consumer.table_insert()
 
-        print(consumer.close_consumer()+"\n")
+        if consumer.close_consumer():
+            print("Consumer closed.\n")
 
         #Wait 5 seconds before pulling website data again
-        time.sleep(5)
+        time.sleep(10)
 
         
