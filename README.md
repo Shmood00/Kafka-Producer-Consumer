@@ -28,7 +28,7 @@ Once the image is finished being built, you can boot into the container and begi
 
 Once this is run, you will be greated with an installation script. Follow the prompts to finalize the setup process.
 
-Once you've finished with the setup you can navigate to the `aiven-kafka` folder within the container to run the actual program. All that's left to do is ensure your Aiven services are up and running and run `python3 main.py`. The program will, by default, reach out to 3 websites and publish the metrics to a Kafka topic and then place them into the PostgeSQL db. After it reaches out to the 3 websites and inserts the information into the databse, the program will wait 10 seconds before repeating the process. To stop the program just hit `CTRL-C`.
+Once you've finished with the setup you can navigate to the `aiven-kafka` folder within the container to run the actual program. All that's left to do is ensure your Aiven services are up and running and run `python3 main.py https://www.example.com website2 website3 ...`. The program will, by default, reach out to 3 websites and publish the metrics to a Kafka topic and then place them into the PostgeSQL db. After it reaches out to the 3 websites and inserts the information into the databse, the program will wait 10 seconds before repeating the process. To stop the program just hit `CTRL-C`.
 
 If at anytime after installation you would like to get back into the container to run the program, run the following commands to avoid having the go through the installation again.
 
