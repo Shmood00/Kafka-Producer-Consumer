@@ -30,27 +30,30 @@ class Consumer:
         except Exception as e:
             print(f"Unable to establish a connection to the database.\nError: {e})")
 
-            return False
+            return None
 
-        return True
+        return self.threaded_pool
     
-    def db_connect(self):
+    def db_connect(self, threaded_pool):
         """ Create a connection within the pool """
         try:
-            self.db_conn = self.threaded_pool.getconn()
+            #self.db_conn = self.threaded_pool.getconn()
+            self.db_conn = threaded_pool.getconn()
         except Exception as e:
-            print(f"Unable to create connection within the pool.\nError: {str(e)}")
+            print(f"Unable to create connection within the pool.\nError: {e}")
 
-            return False
+            return None
         
-        return True
+        return self.db_conn
     
-    def create_table(self):
+    def create_table(self, db_conn):
         try:
-            cursor = self.db_conn.cursor(cursor_factory=RealDictCursor)
+            cursor = db_conn.cursor(cursor_factory=RealDictCursor)
 
-            cursor.execute('CREATE TABLE IF NOT EXISTS public."website-data" (date timestamp, url text, status int, response_time float)')
+            cursor.execute('CREATE TABLE IF NOT EXISTS public."website-data" (date timestamp, url text, status int, phone_number text, response_time float)')
             self.db_conn.commit()
+
+            cursor.close()
         except psycopg2.DatabaseError as e:
             print(f"Error creating table 'website-data' to the database.\nError: {e}")
 
@@ -68,21 +71,17 @@ class Consumer:
         try:
             cursor = self.db_conn.cursor(cursor_factory=RealDictCursor)
         
-        
-            ####CHECK IF TABLE EXISTS IN DB HERE
-            if not self.create_table():
-                return False
-
-            ##get topic data
+            #get topic data
             for _ in range(2):
                 data = self.consumer.poll(timeout_ms=1000)
                 for _,msgs in data.items():
                     for msg in msgs:
+                        
                         json_msg = json.loads(msg.value)
 
                         #Insert kafka topic data into db
                         
-                        cursor.execute('INSERT INTO "website-data" (date, url, status, response_time) VALUES (to_timestamp(%s),%s,%s, %s)', (json_msg['date'],json_msg['url'], json_msg['status'], json_msg['response_time']))
+                        cursor.execute('INSERT INTO "website-data" (date, url, status, phone_number, response_time) VALUES (to_timestamp(%s),%s,%s, %s, %s)', (json_msg['date'],json_msg['url'], json_msg['status'], json_msg['phone_number'], json_msg['response_time']))
                         self.db_conn.commit()
 
                         print("Inserted data from topic into 'website-data' table.")

@@ -1,13 +1,20 @@
+from requests.api import request
 from producer import Producer
 from consumer import Consumer
-import time, configparser
+import time
+import configparser
 
-if __name__ == '__main__':
 
+def main():
+    # List of websites to get analytics for
+    websites = ["https://www.google.ca",
+                "https://www.netflix.com", "https://www.facebook.com/"]
+
+    # Read information from config file
     config = configparser.ConfigParser()
     config.read('config.ini')
 
-    #Create a new producer
+    # Create a new producer
     producer = Producer(
         config['DEFAULT']['host'],
         "SSL",
@@ -15,19 +22,21 @@ if __name__ == '__main__':
         config['DEFAULT']['ssl_certfile'],
         config['DEFAULT']['ssl_keyfile'],
     )
-    
+
     print("Producer created.")
 
-    #Begin while loop
-    while(1):
-        
-        payload = producer.website_data("https://www.netflix.com/")
+    # Retreive analytics from websites
+    payloads = producer.website_data(websites)
 
-        producer.publish_message(config['DEFAULT']['topic'], payload)
+    # Sending website analytics to Kafka topic, create consumer and publish to PostgreSQL db
+    for site in payloads:
 
+        # Send analytics to kafka topic
+        producer.publish_message(config['DEFAULT']['topic'], site)
 
         print("Published data to topic")
 
+        # Create consumer
         consumer = Consumer(
             config['DEFAULT']['topic'],
             'earliest',
@@ -41,22 +50,31 @@ if __name__ == '__main__':
         )
 
         print("Consumer created.")
-                
-        threaded_pool = consumer.db_threaded_pool(1,20,f"postgres://{config['PostgreSQL']['dbusername']}:{config['PostgreSQL']['dbpassword']}@{config['PostgreSQL']['dbhost']}:{config['PostgreSQL']['dbport']}/{config['PostgreSQL']['dbname']}?sslmode=require")
 
-        db_conn = consumer.db_connect()  
+        # Create new threaded pool
+        threaded_pool = consumer.db_threaded_pool(1, 20, f"postgres://{config['PostgreSQL']['dbusername']}:{config['PostgreSQL']['dbpassword']}@{config['PostgreSQL']['dbhost']}:{config['PostgreSQL']['dbport']}/{config['PostgreSQL']['dbname']}?sslmode=require")
+
+        # Connect to db
+        db_conn = consumer.db_connect(threaded_pool)
 
         print("Connected to db")
 
-        print("Inserting topic from data into db...")
+        # Create table in db (if not already created)
+        consumer.create_table(db_conn)
 
-        #Grab kafka topic data and add to db
+        print("Inserting data from topic into db...")
+
+        # Grab data from topic and add to db
         consumer.table_insert()
 
+        # Close consumer
         if consumer.close_consumer():
             print("Consumer closed.\n")
 
-        #Wait 5 seconds before pulling website data again
-        time.sleep(10)
 
-        
+if __name__ == '__main__':
+
+    # Continually loop and wait 10 seconds between getting new website analytics
+    while (1):
+        main()
+        time.sleep(10)
