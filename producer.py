@@ -24,6 +24,7 @@ class Producer:
     
     
     def publish_message(self, topic, payload):
+        """ Function to push website metrics to Kafka topic """
 
         #Convert payload to bytes
         payload_bytes = bytes(payload, encoding="utf-8")
@@ -44,7 +45,10 @@ class Producer:
     
 
     def close_producer(self):
+        """ Function to close producer """
+        
         try:
+            #Close producer
             self.producer.close()
 
             print("Producer closed.")
@@ -65,10 +69,15 @@ class Producer:
         on the page, it will grab that also.
 
         """
+        
+        #List for all payloads
         responses = []
         for url in urls:
+            
+            #Send request to website
             resp = requests.get(url)
-
+            
+            #Search for phone number
             phone_number = re.search("(1-)?(\()?[0-9]{3}(\))?(\s)?(-)?[0-9]{3}-[0-9]{4}", resp.text)
 
             if not phone_number:
@@ -76,6 +85,7 @@ class Producer:
             else:
                 phone_number_result = phone_number.group()
 
+            #Create payload
             payload = json.dumps(
                 {
                     "date":time.time(),
@@ -86,6 +96,7 @@ class Producer:
                 }
             )
 
+            #Add payload to list
             responses.append(payload)
 
         return responses
