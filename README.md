@@ -13,6 +13,7 @@ The metrics collected from the websites include:
 There are a few assumptions that are made in order for the program to run correctly:
 * The program assumes an Aiven Kafka instance has been created already
 * The program assumes an Aiven PostgreSQL database has been created already
+* The program assumes a user exists for the PostgreSQL database
 * The program assumes a Kafka topic has been created in the Aiven console (NOTE: The same topic will be used for testing the producer in `tests_producer.py`)
 * Docker is installed on the system this is being tested on (Docker is required for an easy setup process)
 
