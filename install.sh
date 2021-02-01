@@ -51,7 +51,7 @@ if [ ! -e $CONFIG_FILE ]; then
     echo "**********************************************************************************"
     echo "Creating your 'config.ini' file."
    
-    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nclient_id=$client_id\ngroup_id=$group_id\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" >> $CONFIG_FILE
+    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nclient_id=$client_id\ngroup_id=$group_id\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" > $CONFIG_FILE
     echo "***********************************************************************************"
     echo ""
     echo "***********************************************************************************"
