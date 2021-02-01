@@ -11,6 +11,7 @@ The metrics collected from the websites include:
 # Assumptions
 
 There are a few assumptions that are made in order for the program to run correctly:
+* The program assumes at least one website is given as a commandline argument when running the program: (Ex: `python3 main.py https://www.google.ca/`)
 * The program assumes an Aiven Kafka instance has been created already
 * The program assumes an Aiven PostgreSQL database has been created already
 * The program assumes a user exists for the PostgreSQL database
