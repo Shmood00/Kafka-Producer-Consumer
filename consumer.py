@@ -26,6 +26,7 @@ class Consumer:
         """
         
         try:
+            #Create threaded pool
             self.threaded_pool = pool.ThreadedConnectionPool(min,max,uri)
         except Exception as e:
             print(f"Unable to establish a connection to the database.\nError: {e})")
@@ -37,7 +38,7 @@ class Consumer:
     def db_connect(self, threaded_pool):
         """ Create a connection within the pool """
         try:
-            #self.db_conn = self.threaded_pool.getconn()
+            #Create connection 
             self.db_conn = threaded_pool.getconn()
         except Exception as e:
             print(f"Unable to create connection within the pool.\nError: {e}")
@@ -47,10 +48,15 @@ class Consumer:
         return self.db_conn
     
     def create_table(self, db_conn):
+        """ Function to create table that holds website metrics (if table doesn't exist) """
         try:
+            #Create cursor
             cursor = db_conn.cursor(cursor_factory=RealDictCursor)
-
+            
+            #Make table
             cursor.execute('CREATE TABLE IF NOT EXISTS public."website-data" (date timestamp, url text, status int, phone_number text, response_time float)')
+            
+            #Commit changes to db
             self.db_conn.commit()
 
             cursor.close()
@@ -71,28 +77,30 @@ class Consumer:
         try:
             cursor = self.db_conn.cursor(cursor_factory=RealDictCursor)
         
-            #get topic data
+            #Get topic data
             for _ in range(2):
                 data = self.consumer.poll(timeout_ms=1000)
                 for _,msgs in data.items():
                     for msg in msgs:
                         
+                        #Convert paylaod to json
                         json_msg = json.loads(msg.value)
 
                         #Insert kafka topic data into db
-                        
                         cursor.execute('INSERT INTO "website-data" (date, url, status, phone_number, response_time) VALUES (to_timestamp(%s),%s,%s, %s, %s)', (json_msg['date'],json_msg['url'], json_msg['status'], json_msg['phone_number'], json_msg['response_time']))
+                        
+                        #Commit changes to db
                         self.db_conn.commit()
 
                         print("Inserted data from topic into 'website-data' table.")
 
-            #commit offset so it's not repeated
+            #Commit offset so it's not repeated
             self.consumer.commit()
             
-            #close cursor
+            #Close cursor
             cursor.close()
 
-            #release connection object back to connection pool and close
+            #Release connection object back to connection pool and close
             self.threaded_pool.putconn(self.db_conn, close=True)
 
             
@@ -105,8 +113,10 @@ class Consumer:
     
 
     def close_consumer(self):
-
+        """ Function to close consumer """
+        
         try:
+            #Close consumer
             self.consumer.close()
         except Exception as e:
             print(f"Error closing consumer.\nError: {e}")
@@ -114,12 +124,3 @@ class Consumer:
             return False
         
         return True
-
-        
-
-    
-
-
-
-
-
