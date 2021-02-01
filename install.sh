@@ -27,11 +27,17 @@ if [ ! -e $CONFIG_FILE ]; then
     echo "***********************************************************************************"
     echo ""
     echo "All of your credentials have been moved to '/aiven-kafka/certs/"
+    echo ""
+    echo "***********************************************************************************"
     read -p "Enter in your kafka service URI: " host
     read -p "Enter in your kafka topic: " topic
+    read -p "Enter in your client id name: " client_id
+    read -p "Enter in your group id name: " group_id
 
+    echo ""
     echo "*********************************************************************************"
     echo "Now to capture your PostgreSQL information."
+    echo "*********************************************************************************"
     echo ""
 
     read -p "Enter your PostgreSQL username: " dbusername
@@ -46,10 +52,12 @@ if [ ! -e $CONFIG_FILE ]; then
     echo "Creating your 'config.ini' file."
     echo ""
 
-    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" >> $CONFIG_FILE
+    echo -e "[DEFAULT]\nhost=$host\ntopic=$topic\nclient_id=$client_id\ngroup_id=$group_id\nssl_cafile=/aiven-kafka/certs/ca.pem\nssl_certfile=/aiven-kafka/certs/client.cert\nssl_keyfile=/aiven-kafka/certs/client.key\n\n[PostgreSQL]\ndbusername=$dbusername\ndbpassword=$dbpassword\ndbhost=$dbhost\ndbport=$dbport\ndbname=$dbname" >> $CONFIG_FILE
     echo ""
+    echo "***********************************************************************************"
     echo "Your 'config.ini' file has been created and moved to the location: $CONFIG_FILE"
     echo "Please navigate to the aiven-kafka/ folder to run the program."
+    echo "***********************************************************************************"
     
 else
     echo "Config file already created."
