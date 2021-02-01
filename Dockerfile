@@ -7,6 +7,8 @@ RUN mkdir aiven-kafka && mkdir /aiven-kafka/certs/
 #Move required files to image
 COPY producer.py /aiven-kafka/producer.py
 COPY consumer.py /aiven-kafka/consumer.py
+COPY tests_producer.py /aiven-kafka/tests_producer.py
+COPY tests_consumer.py /aiven-kafka/tests_consumer.py
 COPY main.py /aiven-kafka/main.py
 COPY install.sh /aiven-kafka/install.sh
 
