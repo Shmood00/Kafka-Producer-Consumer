@@ -27,7 +27,7 @@ After cloning this repo, run the following command in order to create a Docker i
 Once the image is finished being built, you can boot into the container and begin with the setup. To do this, run the following:
 * `docker run -it name-of-image`
 
-Once this is run, you will be greated with an installation script. Follow the prompts to finalize the setup process.
+Once this is run, you will be greeted with an installation script. Follow the prompts to finalize the setup process.
 
 Once you've finished with the setup you can navigate to the `aiven-kafka` folder within the container to run the actual program. All that's left to do is ensure your Aiven services are up and running and run `python3 main.py https://www.example.com website2 website3 ...`. The program will publish the inputted websites metrics to a Kafka topic and then place them into the PostgeSQL db. After it reaches out to the websites and inserts the information into the database, the program will wait 10 seconds before repeating the process. To stop the program just hit `CTRL-C`.
 
