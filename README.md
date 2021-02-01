@@ -30,6 +30,17 @@ Once this is run, you will be greated with an installation script. Follow the pr
 
 Once you've finished with the setup you can navigate to the `aiven-kafka` folder within the container to run the actual program. All that's left to do is ensure your Aiven services are up and running and run `python3 main.py`. The program will, by default, reach out to 3 websites and publish the metrics to a Kafka topic and then place them into the PostgeSQL db. After it reaches out to the 3 websites and inserts the information into the databse, the program will wait 10 seconds before repeating the process. To stop the program just hit `CTRL-C`.
 
+If at anytime after installation you would like to get back into the container to run the program, run the following commands to avoid having the go through the installation again.
+
+First, determine the name of the docker container:
+* `docker ps -a`
+
+Once you find the name of the docker container, start the container and then attach to it:
+* `docker start container-name`
+* `docker attach container-name`
+
+Then all that's left to do is direct yourself back to the `aiven-kafka` folder to run the program.
+
 # Attributions
 
 The following section will provide links I used that helped me create this project.
