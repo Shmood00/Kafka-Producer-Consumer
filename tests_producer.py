@@ -33,7 +33,7 @@ class ProducerTest(unittest.TestCase):
     #NOTE: This tests assumes the topic 'test-topic' exists
     def test_publish_message(self):
         self.assertTrue(self.producer.publish_message(
-            "test-topic", "test payload"))
+            config['DEFAULT']['topic'], "test payload"))
         
         self.assertFalse(self.producer.publish_message("fake-topic", "test payload"))
     
