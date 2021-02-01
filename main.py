@@ -1,14 +1,10 @@
-from requests.api import request
 from producer import Producer
 from consumer import Consumer
-import time
-import configparser
-
+import time, configparser, sys
 
 def main():
-    # List of websites to get analytics for
-    websites = ["https://www.google.ca",
-                "https://www.netflix.com", "https://www.facebook.com/"]
+    # List of websites to get metrics for, inputted through commandline arguments
+    websites = sys.argv[1:]
 
     # Read information from config file
     config = configparser.ConfigParser()
